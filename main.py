@@ -7,7 +7,7 @@ def main(gdp_path, population_path, co2_path):
     population = pd.read_csv(population_path)
     co2 = pd.read_csv(co2_path)
 
-
+#testowy komentarz
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("gdp", help="path to csv file with gdp data")
