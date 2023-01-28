@@ -15,6 +15,7 @@ def parse_arguments():
     return arguments
 
 
+# clean data
 def clean(data):
     # change the format of country names so it is the same in all csv files
     if 'Country Name' in data.columns:
