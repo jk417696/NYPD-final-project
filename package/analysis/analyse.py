@@ -1,6 +1,5 @@
-import functions as f
+import package as f
 import pandas as pd
-
 
 def main():
     # disable warnings about chained assignments
@@ -34,7 +33,6 @@ def main():
     print('Country with the biggest decrease in emission per capita from ', max(years)-10, ' to ', max(years),': \n',
           change.iloc[0])
     return 0
-
 
 if __name__ == '__main__':
     # main function

@@ -70,7 +70,7 @@ def merge_data(gdp, population, co2, years):
     for year in years:
         gdp_one_year['Year'] = [year] * len(gdp)
         gdp_one_year['GDP'] = gdp[str(year)]
-        gdp_split = gdp_split.append(gdp_one_year)
+        gdp_split = pd.concat([gdp_split, gdp_one_year])
     # merge co2 data with gdp data in a new format
     data = data.merge(gdp_split, on=['Country', 'Year'], how='outer')
     # create data frame with population in the same format as above
@@ -80,7 +80,7 @@ def merge_data(gdp, population, co2, years):
     for year in years:
         pop_one_year['Year'] = [year] * len(population)
         pop_one_year['Population'] = population[str(year)]
-        pop_split = pop_split.append(pop_one_year)
+        pop_split = pd.concat([pop_split, pop_one_year])
     # merge data about co2, gdp and population in new format
     data = data.merge(pop_split, on=['Country', 'Year', 'Country Code'], how='outer')
     data['Year'] = data['Year'].astype('int64')
@@ -98,7 +98,7 @@ def worst_emitters(co2, years):
     for year in years:
         df_temp = df[df['Year'] == year]
         df_temp = df_temp.sort_values(by=['Per Capita'], ascending=False)
-        emitters = emitters.append(df_temp.head(5))
+        emitters = pd.concat([emitters, df_temp.head(5)])
     return emitters
 
 
@@ -115,7 +115,7 @@ def highest_gdp(data, years):
         df_temp['Per Capita'] = df_temp['GDP'] / df_temp['Population']
         # sort the values and find top 5
         df_temp = df_temp.sort_values(by=['Per Capita'], ascending=False)
-        richest = richest.append(df_temp.head(5))
+        richest = pd.concat([richest, df_temp.head(5)])
     # drop  column population since we dan't need it in our results
     richest = richest.drop(columns=['Population'])
     return richest
@@ -134,3 +134,4 @@ def emission_change(co2, year):
     # sort the values
     change = change[['Country', 'Change']].sort_values(by=['Change'])
     return change
+

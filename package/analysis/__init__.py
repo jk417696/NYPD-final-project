@@ -134,3 +134,4 @@ def emission_change(co2, year):
     # sort the values
     change = change[['Country', 'Change']].sort_values(by=['Change'])
     return change
+
