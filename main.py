@@ -2,17 +2,21 @@ import functions as f
 import pandas as pd
 
 
-def main(gdp_path, population_path, co2_path, start, end):
-    # reading csv files
+def main():
+    # disable warnings about chained assignments
+    pd.options.mode.chained_assignment = None
+    # parse arguments from command line
+    arguments = f.parse_arguments()
+    # read csv files
     # files gdp and population had comments in first 4 rows, so we need to skip these rows
-    gdp = f.clean(pd.read_csv(gdp_path, skiprows=4))
-    population = f.clean(pd.read_csv(population_path, skiprows=4))
-    co2 = f.clean(pd.read_csv(co2_path))
+    gdp = f.clean(pd.read_csv(arguments.gdp, skiprows=4))
+    population = f.clean(pd.read_csv(arguments.population, skiprows=4))
+    co2 = f.clean(pd.read_csv(arguments.co2))
     # return years for which the analysis will be conducted
     years = f.years(gdp, population, co2)
     # if some years were specified in the command line
-    if ((start is not None) | (end is not None)):
-        years = f.cut_years(years, start, end)
+    if ((arguments.start is not None) | (arguments.end is not None)):
+        years = f.cut_years(years, arguments.start, arguments.end)
         # if incorrect years were specified - show the warning and stop the program
         if not len(years):
             return 0
@@ -33,7 +37,5 @@ def main(gdp_path, population_path, co2_path, start, end):
 
 
 if __name__ == '__main__':
-    # parsing arguments from command line
-    arguments = f.parse_arguments()
     # main function
-    main(arguments.gdp, arguments.population, arguments.co2, arguments.start, arguments.end)
+    main()
