@@ -1,4 +1,4 @@
-import package as f
+import functions as f
 import pandas as pd
 
 
