@@ -17,7 +17,7 @@ def parse_arguments():
 
 # clean data
 def clean(data):
-    # change the format of country names so it is the same in all csv files
+    # change the format of country names such that it's the same in all csv files
     if 'Country Name' in data.columns:
         data = data.rename(columns={'Country Name': 'Country'})
         data['Country'] = data['Country'].str.upper()
@@ -45,7 +45,7 @@ def cut_years(years, start, end):
     if end is None:
         end = max(years)
     if start <= end:
-        years = years[(years >= start) & (years <= end)]
+        years = years[(years >= start) & (years <= end)].dropna()
         if len(years):
             return years
         else:

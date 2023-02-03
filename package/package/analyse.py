@@ -1,7 +1,6 @@
 import functions as f
 import pandas as pd
 
-
 def main():
     # disable warnings about chained assignments
     pd.options.mode.chained_assignment = None
@@ -33,6 +32,10 @@ def main():
           change.iloc[-1])
     print('Country with the biggest decrease in emission per capita from ', max(years)-10, ' to ', max(years),': \n',
           change.iloc[0])
+    # create csv files with output dataframes for easier reading
+    data.to_csv('data_merged.csv')
+    worst_emitters.to_csv('worst_emitter.csv')
+    highest_gdp.to_csv('highest_gdp.csv')
     return 0
 
 if __name__ == '__main__':
