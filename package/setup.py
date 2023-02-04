@@ -5,7 +5,7 @@ setuptools.setup(name="package",
      author="Justyna Król",
      author_email="jk417696@students.mimuw.edu.pl",
      description="NYPD final project",
-     url="https://github.com/jk417696/NYPD_projekt_zaliczeniowy",
+     url="https://github.com/jk417696/NYPD-final-project",
      packages=setuptools.find_packages(),
      python_requires='>=3.6',
       )

@@ -92,12 +92,12 @@ def check_loss(gdp, population, co2, data):
     before = pd.concat([gdp['Country'], population['Country'], co2['Country']]).drop_duplicates()
     after = data['Country'].drop_duplicates()
     countries_lost = before[-(before.isin(after))]
-    print('Warning: merge function lost ', (1 - (len(after)/len(before)))*100, '% of all countries')
+    print('Warning: merge function lost ', round((1 - (len(after)/len(before)))*100, 2), '% of all countries')
     print('Countries not included in merged data: \n', countries_lost)
     return countries_lost
 
 
-# returns a table with 5 most emitting countries (per capita) for all years
+# return a table with 5 most emitting countries (per capita) for all years
 # all the information needed is in co2 data therefore we only put this file as an argument
 def worst_emitters(co2, years):
     # include only columns of interest
@@ -112,7 +112,7 @@ def worst_emitters(co2, years):
     return emitters
 
 
-# returns a table with 5 countries with the highest gdp per capita in each year
+# return a table with 5 countries with the highest gdp per capita in each year
 # as an argument we put the merged data
 def highest_gdp(data, years):
     # include only columns of interest
@@ -131,16 +131,22 @@ def highest_gdp(data, years):
     return richest
 
 
-# returns a change in co2 emission in the last 10 years for each country
-def emission_change(co2, year):
+# return a change in co2 emission in the last 10 years (or less if the time interval is shorter) for each country
+def emission_change(co2, years):
+    year = max(years)
+    # if the analysis is conducted for time period shorter than 10 years find the change from start to end
+    if len(years) >= 10:
+        year_min = year - 10
+    else:
+        year_min = min(years)
     # include only columns of interest
     df = co2[['Year', 'Country', 'Per Capita']]
     # find emission in the last years and 10 years prior
     emission_now = df[df['Year'].isin([year])]
-    emission_then = df[df['Year'].isin([year - 10])]
+    emission_then = df[df['Year'].isin([year_min])]
     change = emission_now.merge(emission_then, on=['Country'])
     # calculate the change in emission per capita
     change['Change'] = change['Per Capita_x'] - change['Per Capita_y']
-    # sort the values+
+    # sort the values
     change = change[['Country', 'Change']].sort_values(by=['Change'])
-    return change
+    return change, year, year_min

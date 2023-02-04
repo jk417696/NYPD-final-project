@@ -23,7 +23,7 @@ def main():
     # analyse the data
     data = f.merge_data(gdp, population, co2, years)
     f.check_loss(gdp, population, co2, data)
-    change = f.emission_change(co2, max(years))
+    change = f.emission_change(co2, years)
     worst_emitters = f.worst_emitters(co2, years)
     highest_gdp = f.highest_gdp(data, years)
     # print results
@@ -31,10 +31,14 @@ def main():
           worst_emitters)
     print('Top 5 countries with the highest GDP per capita for each year: \n',
           highest_gdp)
-    print('Country with the biggest increase in emission per capita from ', max(years)-10, ' to ', max(years), ': \n',
-          change.iloc[-1])
-    print('Country with the biggest decrease in emission per capita from ', max(years)-10, ' to ', max(years), ': \n',
-          change.iloc[0])
+    # show countries with the biggest change in emission only if there are at least two years in the data
+    if len(years) < 2:
+        print('Time interval too short: no change in emission observed')
+    else:
+        print('Country with  the biggest increase in emission per capita from ', change[2], ' to ', change[1], ': \n',
+              change[0].iloc[-1])
+        print('Country with the biggest decrease in emission per capita from ', change[2], ' to ', change[1], ': \n',
+              change[0].iloc[0])
     # create csv files with output dataframes for easier reading
     data.to_csv('data_merged.csv')
     worst_emitters.to_csv('worst_emitter.csv')
