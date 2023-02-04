@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 
-# parse arguments (paths to csv files) from command line
+# parse arguments (paths to csv files and years to analyse) from command line
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('gdp', help='path to csv file with gdp data')
@@ -38,6 +38,7 @@ def years(gdp, population, co2):
     years = (years['Year'])
     return years
 
+
 # cut years to those specified in the command line (if possible)
 def cut_years(years, start, end):
     if start is None:
@@ -54,7 +55,6 @@ def cut_years(years, start, end):
     else:
         print('Error: start year higher than end year')
         return []
-
 
 
 # merge data on years and countries
@@ -87,6 +87,16 @@ def merge_data(gdp, population, co2, years):
     return data
 
 
+# check how many countries have been lost while merging the data
+def check_loss(gdp, population, co2, data):
+    before = pd.concat([gdp['Country'], population['Country'], co2['Country']]).drop_duplicates()
+    after = data['Country'].drop_duplicates()
+    countries_lost = before[-(before.isin(after))]
+    print('Warning: merge function lost ', (1 - (len(after)/len(before)))*100, '% of all countries')
+    print('Countries not included in merged data: \n', countries_lost)
+    return countries_lost
+
+
 # returns a table with 5 most emitting countries (per capita) for all years
 # all the information needed is in co2 data therefore we only put this file as an argument
 def worst_emitters(co2, years):
@@ -116,7 +126,7 @@ def highest_gdp(data, years):
         # sort the values and find top 5
         df_temp = df_temp.sort_values(by=['Per Capita'], ascending=False)
         richest = pd.concat([richest, df_temp.head(5)])
-    # drop  column population since we dan't need it in our results
+    # drop  column population since we don't need it in our results
     richest = richest.drop(columns=['Population'])
     return richest
 
@@ -131,7 +141,6 @@ def emission_change(co2, year):
     change = emission_now.merge(emission_then, on=['Country'])
     # calculate the change in emission per capita
     change['Change'] = change['Per Capita_x'] - change['Per Capita_y']
-    # sort the values
+    # sort the values+
     change = change[['Country', 'Change']].sort_values(by=['Change'])
     return change
-
