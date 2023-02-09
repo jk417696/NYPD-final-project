@@ -109,6 +109,7 @@ def worst_emitters(co2, years):
         df_temp = df[df['Year'] == year]
         df_temp = df_temp.sort_values(by=['Per Capita'], ascending=False)
         emitters = pd.concat([emitters, df_temp.head(5)])
+    emitters[['Year', 'Total']] = emitters[['Year', 'Total']].astype('int64')
     return emitters
 
 
@@ -128,6 +129,7 @@ def highest_gdp(data, years):
         richest = pd.concat([richest, df_temp.head(5)])
     # drop  column population since we don't need it in our results
     richest = richest.drop(columns=['Population'])
+    richest['Year'] = richest['Year'].astype('int64')
     return richest
 
 
